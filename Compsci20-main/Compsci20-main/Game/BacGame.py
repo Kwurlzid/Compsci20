@@ -148,12 +148,45 @@ def display_cards(player_hand, banker_hand):
         label.pack(side=LEFT)
         banker_images.append(label)
 
+#reset the game
+def reset_game():
+    confirm_reset = messagebox.askyesno("Confirm Reset", "Are you sure you want to reset the game?")
+    
+    if confirm_reset:
+        global balance, player_bet, banker_bet, tie_bet, deck, player_images, banker_images
+
+
+    balance = 100
+    player_bet = 0
+    banker_bet = 0
+    tie_bet = 0
+    deck = []
+    for suit in suits:
+        for val in values:
+            deck.append(val + suit)
+
+    deck = deck * 8 
+    random.shuffle(deck)
+
+    # Clear old images of cards
+    for image_label in player_images:
+        image_label.destroy()
+    for image_label in banker_images:
+        image_label.destroy()
+
+    player_images = []
+    banker_images = []
+
+    update_balance()
+    player_hand_label.configure(text="Player Hand: --")
+    banker_hand_label.configure(text="Banker Hand: --")
+
 root = Tk()
 root.title("Baccarat")
 root.geometry("800x600")
 root.resizable(width=False, height=False)
 
-#Placing all widgets
+# Placing all widgets
 BC = Image.open("Table.png").resize((800, 600), Image.LANCZOS)
 BK = ImageTk.PhotoImage(BC)
 Background = Label(root, image=BK)
@@ -177,7 +210,7 @@ player_hand_label.pack(pady=5)
 banker_hand_label = Label(banker_card_frame, text="Banker Hand: --", font=("Bell Gothic Std Black", 12))
 banker_hand_label.pack(pady=5)
 
-title_label = Label(root, text="Baccarat", font=("Bell Gothic Std Black", 16))
+title_label = Label(root, text="Baccarat", font=("Comic Sans",25))
 title_label.pack(pady=10)
 
 player_images = []
@@ -206,5 +239,8 @@ banker_bet_label.pack()
 
 tie_bet_label = Label(root, text=f"Tie Bet: ${tie_bet}", font=("Bell Gothic Std Black", 12))
 tie_bet_label.pack()
+
+reset_button = Button(root, text="Reset Game", font=("Bell Gothic Std Black", 12), command=reset_game)
+reset_button.pack(side=RIGHT, padx=20, pady=20)
 
 root.mainloop()
